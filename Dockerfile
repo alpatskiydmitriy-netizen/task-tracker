@@ -37,6 +37,7 @@ USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 ENV DATABASE_PATH=/app/data/tasks.db
 
 ENTRYPOINT ["/app/entrypoint.sh"]
