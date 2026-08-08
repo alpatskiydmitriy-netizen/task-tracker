@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { tasks, categories } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function GET() {
-  const rows = await db
+  const rows = await getDb()
     .select({
       id: tasks.id,
       title: tasks.title,
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Название обязательно" }, { status: 400 });
   }
 
-  const [created] = await db
+  const [created] = await getDb()
     .insert(tasks)
     .values({
       title: body.title.trim(),
