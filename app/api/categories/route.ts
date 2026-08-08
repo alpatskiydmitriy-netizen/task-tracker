@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { categories } from "@/lib/db/schema";
 
 export async function GET() {
-  const rows = await db.select().from(categories).orderBy(categories.name);
+  const rows = await getDb().select().from(categories).orderBy(categories.name);
   return NextResponse.json(rows);
 }
 
@@ -16,12 +16,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const [created] = await db.insert(categories).values({ name }).returning();
+    const [created] = await getDb().insert(categories).values({ name }).returning();
     return NextResponse.json(created, { status: 201 });
   } catch {
     // уже существует — просто вернём её
-    const existing = await db.select().from(categories);
-    const found = existing.find((c) => c.name === name);
+    const existing = await getDb().select().from(categories);
+    const found = existing.find((c: typeof categories.$inferSelect) => c.name === name);
     return NextResponse.json(found, { status: 200 });
   }
 }
